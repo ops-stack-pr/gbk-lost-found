@@ -551,11 +551,13 @@
             }
             e.target.value = value;
         });
-    </script>
-    // Form submission - SCRIPT BARU (ANTI CORS)
-form.addEventListener('submit', async function(e) {
+   // SUBMIT ANTI CORS - JSONP METHOD
+form.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    submitBtn.disabled
+    const formData = {
+        timestamp: new Date().toISOString(),
+        formType
+
 </body>
 </html>
