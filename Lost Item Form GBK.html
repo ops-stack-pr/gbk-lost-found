@@ -526,19 +526,12 @@
                 form.style.display = 'none';
                 successMessage.classList.add('active');
                 
-                // Store in localStorage for demo
-                const existingData = JSON.parse(localStorage.getItem('lostItems') || '[]');
-                existingData.push(formData);
-                localStorage.setItem('lostItems', JSON.stringify(existingData));
-            }, 1500);
-        });
+                            // KIRIM KE GSHEET
+            const params = new URLSearchParams(formData).toString();
+            fetch('https://script.google.com/macros/s/AKfycbzu-3H7ft85dlHuRriZcuupdAjnMBx1xtRRGMLad5g/exec?' + params, {
+                method: 'GET'
+            }).then(()
 
-        function showError(message) {
-            errorAlert.textContent = message;
-            errorAlert.classList.add('active');
-            setTimeout(() => {
-                errorAlert.classList.remove('active');
-            }, 5000);
         }
 
         // Phone number formatting
