@@ -487,8 +487,44 @@
         });
 
         // Form submission
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
+       form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Mengirim...';
+    
+    // Helper function
+    const getValue = (id) => {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    };
+    
+    const formData = {
+        timestamp: new Date().toISOString(),
+        formType: 'LOST',
+        name: getValue('name'),
+        phone: getValue('phone'),
+        idNumber: getValue('idNumber'),
+        itemType: getValue('itemType'),
+        description: getValue('description'),
+        lastLocation: getValue('lastLocation'),
+        latitude: getValue('latitude'),
+        longitude: getValue('longitude'),
+        lostDateTime: getValue('lostDateTime'),
+        additionalInfo: getValue('additionalInfo'),
+        photoUploaded: document.getElementById('itemPhoto') && document.getElementById('itemPhoto').files.length > 0 ? 'Ya' : 'Tidak'
+    };
+    
+    const params = new URLSearchParams(formData).toString();
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzRxrpDRB8mQK3W2ZQ4YZ3y5yxcly-jPLeQbmPgS5ZClthbiW2zOTJTZmrVy5_pA1TG/exec';
+    
+    fetch(scriptURL + '?' + params, { method: 'GET', mode: 'no-cors' })
+    .then(() => {
+        form.style.display = 'none';
+        successMessage.classList.add('active');
+    });
+});
+
             
             // Validate ID number
             const idNumber = document.getElementById('idNumber').value;
