@@ -146,123 +146,103 @@
         <div class="success-icon">✅</div>
         <h2 style="color:#10b981;margin-bottom:12px;">Berhasil!</h2>
         <p style="margin-bottom:24px;">Laporan telah dikirim. Tim GBK akan menghubungi Anda.</p>
-        <button class="btn btn-primary" onclick="window.location.href='https://ops-stack-pr.github.io/gbk-lost-found/'">🏠 Kembali ke Home</button>
+        <button class="btn btn-primary" onclick="window.location.href='https://ops-stack-pr.github.io/gbk-lost-lost/'">🏠 Kembali ke Home</button>
         <p style="margin-top:12px;font-size:13px;color:#6b7280;">Auto redirect dalam 3 detik...</p>
       </div>
     </div>
   </div>
 
 <script>
-  const form = document.getElementById('lostForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const successMessage = document.getElementById('successMessage');
-  const getLocationBtn = document.getElementById('getLocationBtn');
-  const locationInfo = document.getElementById('locationInfo');
-  const locationText = document.getElementById('locationText');
-  const photoInput = document.getElementById('itemPhoto');
+    const form = document.getElementById('lostForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+    const getLocationBtn = document.getElementById('getLocationBtn');
+    const locationInfo = document.getElementById('locationInfo');
+    const locationText = document.getElementById('locationText');
+    const photoInput = document.getElementById('itemPhoto');
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRad4HRD8kHlkJp5_al_1OeSmjjsG9ZdB305kM2jFH41zaNIriOzdwu16UYilMnKmy/exec';
 
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziTD7TlezDvbM0s3vd-sJZf0AuWZJhKCnN9ysESjjkf5OK7ydc-SRGp_cAz3IpoOQS/exec';
-
-  // GPS BUTTON
-  getLocationBtn.addEventListener('click', function() {
-    if (!navigator.geolocation) {
-      alert('Browser tidak support GPS');
-      return;
-    }
-    
-    getLocationBtn.disabled = true;
-    getLocationBtn.textContent = '⏳ Loading...';
-    
-    navigator.geolocation.getCurrentPosition(
-      function(pos) {
-        document.getElementById('latitude').value = pos.coords.latitude;
-        document.getElementById('longitude').value = pos.coords.longitude;
-        locationText.textContent = pos.coords.latitude.toFixed(6) + ', ' + pos.coords.longitude.toFixed(6);
-        locationInfo.classList.add('active');
-        getLocationBtn.textContent = '✅ Lokasi Didapat';
-        getLocationBtn.style.background = '#10b981';
-        getLocationBtn.disabled = false;
-      },
-      function() {
-        getLocationBtn.disabled = false;
-        getLocationBtn.textContent = '📍 Dapatkan Lokasi';
-        alert('Gagal mendapatkan lokasi. Izinkan akses GPS di browser.');
+    getLocationBtn.addEventListener('click', function() {
+      if (navigator.geolocation) {
+        getLocationBtn.disabled = true;
+        getLocationBtn.textContent = '⏳ Loading...';
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          document.getElementById('latitude').value = pos.coords.latitude;
+          document.getElementById('longitude').value = pos.coords.longitude;
+          locationText.textContent = `📍 ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+          locationInfo.classList.add('active');
+          getLocationBtn.textContent = '✅ Lokasi Didapat';
+          getLocationBtn.style.background = '#10b981';
+        }, function() {
+          getLocationBtn.disabled = false;
+          getLocationBtn.textContent = '📍 Dapatkan Lokasi';
+          alert('Gagal mendapatkan lokasi. Coba lagi.');
+        });
+      } else {
+        alert('Browser tidak support GPS.');
       }
-    );
-  });
+    });
 
-  // FORM SUBMIT dengan IFRAME METHOD
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const lat = document.getElementById('latitude').value;
-    const lon = document.getElementById('longitude').value;
-    if (!lat || !lon) {
-      alert('⚠️ Lokasi GPS wajib! Klik tombol 📍 Dapatkan Lokasi terlebih dahulu.');
-      return;
-    }
-    
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Mengirim...';
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
 
-    // CONVERT FOTO KE BASE64 (NO SIZE LIMIT)
-    if (photoInput.files.length > 0) {
+      if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
+        alert('GPS wajib diisi! Klik tombol Dapatkan Lokasi.');
+        return;
+      }
+
+      if (photoInput.files.length === 0) {
+        alert('Foto wajib diupload!');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ Mengirim...';
+
       const file = photoInput.files[0];
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        submitViaIframe(e.target.result);
+      const photoBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+
+      const data = {
+        timestamp: new Date().toISOString(),
+        formType: 'lost',
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        idNumber: '',
+        itemType: document.getElementById('itemType').value,
+        description: document.getElementById('description').value,
+        lostLocation: document.getElementById('lostLocation').value,
+        lostDateTime: document.getElementById('lostDateTime').value,
+        latitude: document.getElementById('latitude').value,
+        longitude: document.getElementById('longitude').value,
+        photoBase64: photoBase64
       };
-      reader.readAsDataURL(file);
-    } else {
-      submitViaIframe('');
-    }
-  });
 
-  function submitViaIframe(photoBase64) {
-    // Buat form POST dengan iframe
-    const iframe = document.createElement('iframe');
-    iframe.name = 'hiddenFrame';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    const postForm = document.createElement('form');
-    postForm.target = 'hiddenFrame';
-    postForm.method = 'POST';
-    postForm.action = SCRIPT_URL;
-    
-    const fields = {
-      timestamp: new Date().toISOString(),
-      formType: 'LOST',
-      name: document.getElementById('name').value,
-      phone: document.getElementById('phone').value,
-      idNumber: document.getElementById('idNumber').value,
-      itemType: document.getElementById('itemType').value,
-      description: document.getElementById('description').value,
-      lastLocation: document.getElementById('lastLocation').value,
-      lostDateTime: document.getElementById('lostDateTime').value,
-      latitude: document.getElementById('latitude').value,
-      longitude: document.getElementById('longitude').value,
-      photoBase64: photoBase64
-    };
-    
-    for (let key in fields) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = fields[key];
-      postForm.appendChild(input);
-    }
-    
-    document.body.appendChild(postForm);
-    postForm.submit();
-    
-    // Show success setelah 2 detik
-    setTimeout(() => {
-      form.style.display = 'none';
-      successMessage.classList.add('active');
-    }, 2000);
-  }
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.status === 'success') {
+            form.style.display = 'none';
+            successMessage.classList.add('active');
+            setTimeout(() => { window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-lost/'; }, 3000);
+          } else {
+            throw new Error(result.message);
+          }
+        })
+        .catch((err) => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim Laporan';
+          alert('Gagal mengirim: ' + err.message);
+        });
+    });
 </script>
+
 
 
 </body>
