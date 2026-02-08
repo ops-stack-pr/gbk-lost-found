@@ -52,11 +52,6 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Nomor KTP <span class="required">*</span></label>
-          <input type="text" class="form-input" id="idNumber" required maxlength="16">
-        </div>
-
-        <div class="form-group">
           <label class="form-label">Jenis Barang <span class="required">*</span></label>
           <select class="form-select" id="itemType" required>
             <option value="">Pilih jenis barang</option>
@@ -125,19 +120,20 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Lokasi GPS</label>
+          <label class="form-label">Lokasi GPS <span class="required">*</span></label>
           <button type="button" class="btn btn-location" id="getLocationBtn">📍 Dapatkan Lokasi</button>
           <div class="location-info" id="locationInfo">
             <span id="locationText"></span>
           </div>
-          <input type="hidden" id="latitude">
-          <input type="hidden" id="longitude">
+          <input type="hidden" id="latitude" required>
+          <input type="hidden" id="longitude" required>
+          <p class="help-text">Klik tombol untuk mengisi lokasi GPS</p>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Upload Foto Barang</label>
-          <input type="file" class="form-input" id="itemPhoto" accept="image/*" style="padding:8px;">
-          <p class="help-text">Opsional: Upload foto barang untuk memudahkan identifikasi</p>
+          <label class="form-label">Upload Foto Barang <span class="required">*</span></label>
+          <input type="file" class="form-input" id="itemPhoto" accept="image/*" style="padding:8px;" required>
+          <p class="help-text">Upload foto barang untuk memudahkan identifikasi</p>
         </div>
 
         <button type="submit" class="btn btn-primary" id="submitBtn">Kirim Laporan</button>
@@ -176,32 +172,42 @@
         }, function() {
           getLocationBtn.disabled = false;
           getLocationBtn.textContent = '📍 Dapatkan Lokasi';
-          alert('Gagal mendapatkan lokasi');
+          alert('Gagal mendapatkan lokasi. Coba lagi.');
         });
+      } else {
+        alert('Browser tidak support GPS.');
       }
     });
 
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
+
+      if (!document.getElementById('latitude').value || !document.getElementById('longitude').value) {
+        alert('GPS wajib diisi! Klik tombol Dapatkan Lokasi.');
+        return;
+      }
+
+      if (photoInput.files.length === 0) {
+        alert('Foto wajib diupload!');
+        return;
+      }
+
       submitBtn.disabled = true;
       submitBtn.textContent = '⏳ Mengirim...';
 
-      let photoBase64 = '';
-      if (photoInput.files.length > 0) {
-        const file = photoInput.files[0];
-        photoBase64 = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.readAsDataURL(file);
-        });
-      }
+      const file = photoInput.files[0];
+      const photoBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
 
       const data = {
         timestamp: new Date().toISOString(),
         formType: 'FOUND',
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
-        idNumber: document.getElementById('idNumber').value,
+        idNumber: '',
         itemType: document.getElementById('itemType').value,
         description: document.getElementById('description').value,
         foundLocation: document.getElementById('foundLocation').value,
@@ -212,7 +218,7 @@
       };
 
       const params = new URLSearchParams(data).toString();
-      const url = `https://script.google.com/macros/s/AKfycbziTD7TlezDvbM0s3vd-sJZf0AuWZJhKCnN9ysESjjkf5OK7ydc-SRGp_cAz3IpoOQS/exec`;
+      const url = `https://script.google.com/macros/s/AKfycbzfmkBNVZfH70IjYHkN6p8XuqzGWAtMsYCblvVzCL7CV-hSDUMoW07Y2rGsOURnu4hexA/exec`;
 
       fetch(`${url}?${params}`, { method: 'GET', mode: 'no-cors' })
         .then(() => {
