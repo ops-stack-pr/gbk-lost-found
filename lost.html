@@ -170,12 +170,16 @@
       getLocationBtn.textContent = '⏳ Loading...';
       navigator.geolocation.getCurrentPosition(
         function(pos) {
-          document.getElementById('latitude').value = pos.coords.latitude;
-          document.getElementById('longitude').value = pos.coords.longitude;
-          locationText.textContent = pos.coords.latitude.toFixed(6) + ', ' + pos.coords.longitude.toFixed(6);
-          locationInfo.classList.add('active');
-          getLocationBtn.textContent = '✅ Lokasi Didapat';
-          getLocationBtn.style.background = '#10b981';
+         document.addEventListener('DOMContentLoaded', function() {
+  const getLocationBtn = document.getElementById('getLocationBtn');
+  const locationInfo = document.getElementById('locationInfo');
+  const locationText = document.getElementById('locationText');
+  
+  getLocationBtn.addEventListener('click', function() {
+    console.log('GPS clicked'); // DEBUG
+    
+    getLocationBtn.disabled
+
         },
         function() {
           getLocationBtn.disabled = false;
