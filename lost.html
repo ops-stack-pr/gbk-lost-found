@@ -165,7 +165,7 @@
   // now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   // document.getElementById('lostDateTime').value = now.toISOString().slice(0, 16);
 
-  getLocationBtn.addEventListener('click', function() {
+  function() {
     if (navigator.geolocation) {
       getLocationBtn.disabled = true;
       getLocationBtn.textContent = '⏳ Loading...';
