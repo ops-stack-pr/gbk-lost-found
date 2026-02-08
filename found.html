@@ -2,55 +2,60 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lapor Barang Ditemukan - GBK</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:-apple-system,sans-serif;background:linear-gradient(135deg,#d1fae5,#a7f3d0);padding:20px;min-height:100vh;}
-    .container{max-width:600px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);}
-    .header{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:32px 24px;text-align:center;}
-    .header h1{font-size:24px;margin-bottom:8px;}
-    .form-content{padding:32px 24px;}
-    .form-group{margin-bottom:20px;}
-    .form-label{display:block;font-weight:600;margin-bottom:8px;font-size:14px;}
-    .required{color:#ef4444;}
-    .form-input,.form-textarea,.form-select{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:8px;font-size:15px;}
-    .form-input:focus,.form-textarea:focus,.form-select:focus{outline:none;border-color:#10b981;}
-    .form-textarea{min-height:100px;resize:vertical;}
-    .btn{width:100%;padding:14px;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px;}
-    .btn-primary{background:#10b981;color:#fff;}
-    .btn-primary:hover{background:#059669;}
-    .btn-primary:disabled{background:#9ca3af;cursor:not-allowed;}
-    .btn-location{background:#3b82f6;color:#fff;}
-    .btn-location:hover{background:#2563eb;}
-    .location-info{margin-top:12px;padding:12px;background:#dbeafe;border-radius:8px;font-size:14px;display:none;}
-    .location-info.active{display:block;}
-    .success-message{display:none;padding:32px;text-align:center;}
-    .success-message.active{display:block;}
-    .success-icon{width:80px;height:80px;background:#d1fae5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:40px;}
-    .help-text{font-size:13px;color:#6b7280;margin-top:6px;}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, sans-serif; background: linear-gradient(135deg, #f0fdf4, #dcfce7); padding: 20px; min-height: 100vh; }
+    .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.1); }
+    .header { background: linear-gradient(135deg, #10b981, #059669); color: #fff; padding: 32px 24px; text-align: center; }
+    .header h1 { font-size: 24px; margin-bottom: 8px; }
+    .form-content { padding: 32px 24px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    .required { color: #ef4444; }
+    .form-input, .form-textarea, .form-select { width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { outline: none; border-color: #10b981; }
+    .form-textarea { min-height: 100px; resize: vertical; }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    .btn-primary { background: #10b981; color: #fff; }
+    .btn-primary:hover { background: #059669; }
+    .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+    .btn-location { background: #3b82f6; color: #fff; }
+    .btn-location:hover { background: #2563eb; }
+    .location-info { margin-top: 12px; padding: 12px; background: #dbeafe; border-radius: 8px; font-size: 14px; display: none; }
+    .location-info.active { display: block; }
+    .success-message { display: none; padding: 32px; text-align: center; }
+    .success-message.active { display: block; }
+    .success-icon { width: 80px; height: 80px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 40px; }
+    .help-text { font-size: 13px; color: #6b7280; margin-top: 6px; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div style="font-size:48px;margin-bottom:16px;">📱</div>
+      <div style="font-size:48px; margin-bottom:16px;">📦</div>
       <h1>Form Barang Ditemukan</h1>
       <p>Gelora Bung Karno - GBK</p>
     </div>
-    
+
     <div class="form-content">
       <form id="foundForm">
         <div class="form-group">
-          <label class="form-label">Nama Pelapor <span class="required">*</span></label>
+          <label class="form-label">Nama Lengkap <span class="required">*</span></label>
           <input type="text" class="form-input" id="name" required>
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Nomor Telepon <span class="required">*</span></label>
           <input type="tel" class="form-input" id="phone" required>
         </div>
-        
+
+        <div class="form-group">
+          <label class="form-label">Nomor KTP <span class="required">*</span></label>
+          <input type="text" class="form-input" id="idNumber" required maxlength="16">
+        </div>
+
         <div class="form-group">
           <label class="form-label">Jenis Barang <span class="required">*</span></label>
           <select class="form-select" id="itemType" required>
@@ -73,14 +78,14 @@
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Deskripsi <span class="required">*</span></label>
           <textarea class="form-textarea" id="description" required placeholder="Deskripsikan barang: warna, merek, ciri khusus"></textarea>
         </div>
-        
+
         <div class="form-group">
-          <label class="form-label">Lokasi Ditemukan <span class="required">*</span></label>
+          <label class="form-label">Lokasi Penemuan <span class="required">*</span></label>
           <select class="form-select" id="foundLocation" required>
             <option value="">Pilih lokasi</option>
             <option value="Stadion Utama">Stadion Utama</option>
@@ -113,35 +118,37 @@
             <option value="Lainnya">Lainnya</option>
           </select>
         </div>
-        
+
         <div class="form-group">
-          <label class="form-label">Tanggal Ditemukan <span class="required">*</span></label>
+          <label class="form-label">Tanggal/Waktu Penemuan <span class="required">*</span></label>
           <input type="datetime-local" class="form-input" id="foundDateTime" required>
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Lokasi GPS</label>
           <button type="button" class="btn btn-location" id="getLocationBtn">📍 Dapatkan Lokasi</button>
-          <div class="location-info" id="locationInfo"><span id="locationText"></span></div>
+          <div class="location-info" id="locationInfo">
+            <span id="locationText"></span>
+          </div>
           <input type="hidden" id="latitude">
           <input type="hidden" id="longitude">
         </div>
-        
+
         <div class="form-group">
           <label class="form-label">Upload Foto Barang</label>
           <input type="file" class="form-input" id="itemPhoto" accept="image/*" style="padding:8px;">
           <p class="help-text">Opsional: Upload foto barang untuk memudahkan identifikasi</p>
         </div>
-        
+
         <button type="submit" class="btn btn-primary" id="submitBtn">Kirim Laporan</button>
       </form>
-      
+
       <div class="success-message" id="successMessage">
         <div class="success-icon">✅</div>
-        <h2 style="color:#10b981;margin-bottom:12px;">Berhasil!</h2>
+        <h2 style="color:#10b981; margin-bottom:12px;">Berhasil!</h2>
         <p style="margin-bottom:24px;">Laporan telah dikirim. Terima kasih atas kejujuran Anda!</p>
-        <button class="btn btn-primary" onclick="window.location.href='https://sayawni.github.io/gbk-lost-found/'">🏠 Kembali ke Home</button>
-        <p style="margin-top:12px;font-size:13px;color:#6b7280;">Auto redirect dalam 3 detik...</p>
+        <button class="btn btn-primary" onclick="window.location.href='https://ops-stack-pr.github.io/gbk-lost-found/'">Kembali ke Home</button>
+        <p style="margin-top:12px; font-size:13px; color:#6b7280;">Auto redirect dalam 3 detik...</p>
       </div>
     </div>
   </div>
@@ -155,63 +162,63 @@
     const locationText = document.getElementById('locationText');
     const photoInput = document.getElementById('itemPhoto');
 
-    // Set default datetime to now
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    document.getElementById('foundDateTime').value = now.toISOString().slice(0, 16);
-
     getLocationBtn.addEventListener('click', function() {
       if (navigator.geolocation) {
         getLocationBtn.disabled = true;
         getLocationBtn.textContent = '⏳ Loading...';
-        navigator.geolocation.getCurrentPosition(
-          function(pos) {
-            document.getElementById('latitude').value = pos.coords.latitude;
-            document.getElementById('longitude').value = pos.coords.longitude;
-            locationText.textContent = pos.coords.latitude.toFixed(6) + ', ' + pos.coords.longitude.toFixed(6);
-            locationInfo.classList.add('active');
-            getLocationBtn.textContent = '✅ Lokasi Didapat';
-            getLocationBtn.style.background = '#10b981';
-          },
-          function() {
-            getLocationBtn.disabled = false;
-            getLocationBtn.textContent = '📍 Dapatkan Lokasi';
-            alert('Gagal mendapatkan lokasi');
-          }
-        );
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          document.getElementById('latitude').value = pos.coords.latitude;
+          document.getElementById('longitude').value = pos.coords.longitude;
+          locationText.textContent = `📍 ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+          locationInfo.classList.add('active');
+          getLocationBtn.textContent = '✅ Lokasi Didapat';
+          getLocationBtn.style.background = '#10b981';
+        }, function() {
+          getLocationBtn.disabled = false;
+          getLocationBtn.textContent = '📍 Dapatkan Lokasi';
+          alert('Gagal mendapatkan lokasi');
+        });
       }
     });
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
       e.preventDefault();
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Mengirim...';
+      submitBtn.textContent = '⏳ Mengirim...';
+
+      let photoBase64 = '';
+      if (photoInput.files.length > 0) {
+        const file = photoInput.files[0];
+        photoBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+      }
 
       const data = {
         timestamp: new Date().toISOString(),
         formType: 'FOUND',
         name: document.getElementById('name').value,
         phone: document.getElementById('phone').value,
-        idNumber: '',
+        idNumber: document.getElementById('idNumber').value,
         itemType: document.getElementById('itemType').value,
         description: document.getElementById('description').value,
         foundLocation: document.getElementById('foundLocation').value,
         foundDateTime: document.getElementById('foundDateTime').value,
         latitude: document.getElementById('latitude').value,
         longitude: document.getElementById('longitude').value,
-        photoUploaded: photoInput.files.length > 0 ? 'Ya' : 'Tidak'
+        photoBase64: photoBase64
       };
 
       const params = new URLSearchParams(data).toString();
-      const url = 'https://script.google.com/macros/s/AKfycbzfmkBNVZfH70IjYHkN6p8XuqzGWAtMsYCblvVzCL7CV-hSDUMoW_07Y2rGsOURnu4h/exec';
+      const url = `https://script.google.com/macros/s/AKfycbzfmkBNVZfH70IjYHkN6p8XuqzGWAtMsYCblvVzCL7CV-hSDUMoW07Y2rGsOURnu4hexA/exec`;
 
-      fetch(url + '?' + params, { method: 'GET', mode: 'no-cors' })
+      fetch(`${url}?${params}`, { method: 'GET', mode: 'no-cors' })
         .then(() => {
           form.style.display = 'none';
           successMessage.classList.add('active');
-          setTimeout(() => {
-            window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-found/';
-          }, 3000);
+          setTimeout(() => { window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-found/'; }, 3000);
         })
         .catch(() => {
           submitBtn.disabled = false;
