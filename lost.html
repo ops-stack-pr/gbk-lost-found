@@ -203,8 +203,8 @@
       };
 
       const params = new URLSearchParams(data).toString();
-      const url = 'https://script.google.com/macros/s/AKfycbzAb5NYVc3HF8ozmX6OA_wIwd-nJlz2JR7_-g-DIX9vxdXqRNPpZxtIbYKjTQv0mNU/exec';
-
+   const url = 'https://script.google.com/macros/s/AKfycbzfmkBNVZfH70IjYHkN6p8XuqzGWAtMsYCblvVzCL7CV-hSDUMoW_07Y2rGsOURnu4h/exec';
+      
       fetch(url + '?' + params, { method: 'GET', mode: 'no-cors' })
         .then(() => {
           form.style.display = 'none';
