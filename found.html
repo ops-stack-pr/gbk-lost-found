@@ -149,7 +149,7 @@
     </div>
   </div>
 
-  <script>
+<script>
     const form = document.getElementById('foundForm');
     const submitBtn = document.getElementById('submitBtn');
     const successMessage = document.getElementById('successMessage');
@@ -157,6 +157,7 @@
     const locationInfo = document.getElementById('locationInfo');
     const locationText = document.getElementById('locationText');
     const photoInput = document.getElementById('itemPhoto');
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwRad4HRD8kHlkJp5_al_1OeSmjjsG9ZdB305kM2jFH41zaNIriOzdwu16UYilMnKmy/exec';
 
     getLocationBtn.addEventListener('click', function() {
       if (navigator.geolocation) {
@@ -217,21 +218,27 @@
         photoBase64: photoBase64
       };
 
-      const params = new URLSearchParams(data).toString();
-      const url = `https://script.google.com/macros/s/AKfycbziTD7TlezDvbM0s3vd-sJZf0AuWZJhKCnN9ysESjjkf5OK7ydc-SRGp_cAz3IpoOQS/exec`;
-
-      fetch(`${url}?${params}`, { method: 'GET', mode: 'no-cors' })
-        .then(() => {
-          form.style.display = 'none';
-          successMessage.classList.add('active');
-          setTimeout(() => { window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-found/'; }, 3000);
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.status === 'success') {
+            form.style.display = 'none';
+            successMessage.classList.add('active');
+            setTimeout(() => { window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-found/'; }, 3000);
+          } else {
+            throw new Error(result.message);
+          }
         })
-        .catch(() => {
+        .catch((err) => {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Kirim Laporan';
-          alert('Gagal mengirim. Coba lagi.');
+          alert('Gagal mengirim: ' + err.message);
         });
     });
-  </script>
+</script>
+
 </body>
 </html>
