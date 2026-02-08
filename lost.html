@@ -152,7 +152,7 @@
     </div>
   </div>
 
-<script>
+  <script>
   const form = document.getElementById('lostForm');
   const submitBtn = document.getElementById('submitBtn');
   const successMessage = document.getElementById('successMessage');
@@ -191,7 +191,7 @@
     );
   });
 
-  // FORM SUBMIT
+  // FORM SUBMIT dengan IFRAME METHOD
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -205,23 +205,32 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Mengirim...';
 
-    // CONVERT FOTO KE BASE64
+    // CONVERT FOTO KE BASE64 (NO SIZE LIMIT)
     if (photoInput.files.length > 0) {
       const file = photoInput.files[0];
       const reader = new FileReader();
-      
       reader.onload = function(e) {
-        sendData(e.target.result);
+        submitViaIframe(e.target.result);
       };
-      
       reader.readAsDataURL(file);
     } else {
-      sendData('');
+      submitViaIframe('');
     }
   });
 
-  function sendData(photoBase64) {
-    const data = {
+  function submitViaIframe(photoBase64) {
+    // Buat form POST dengan iframe
+    const iframe = document.createElement('iframe');
+    iframe.name = 'hiddenFrame';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const postForm = document.createElement('form');
+    postForm.target = 'hiddenFrame';
+    postForm.method = 'POST';
+    postForm.action = SCRIPT_URL;
+    
+    const fields = {
       timestamp: new Date().toISOString(),
       formType: 'LOST',
       name: document.getElementById('name').value,
@@ -235,25 +244,23 @@
       longitude: document.getElementById('longitude').value,
       photoBase64: photoBase64
     };
-
-    const params = new URLSearchParams(data).toString();
-
-    fetch(SCRIPT_URL + '?' + params, { 
-      method: 'GET', 
-      mode: 'no-cors' 
-    })
-    .then(() => {
+    
+    for (let key in fields) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = fields[key];
+      postForm.appendChild(input);
+    }
+    
+    document.body.appendChild(postForm);
+    postForm.submit();
+    
+    // Show success setelah 2 detik
+    setTimeout(() => {
       form.style.display = 'none';
       successMessage.classList.add('active');
-      setTimeout(() => {
-        window.location.href = 'https://ops-stack-pr.github.io/gbk-lost-found/';
-      }, 3000);
-    })
-    .catch(() => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Kirim Laporan';
-      alert('Gagal mengirim. Coba lagi.');
-    });
+    }, 2000);
   }
 </script>
 
